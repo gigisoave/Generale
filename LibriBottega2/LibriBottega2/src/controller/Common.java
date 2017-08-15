@@ -22,7 +22,7 @@ public class Common {
 		RequestDispatcher dispatcher = sc.getRequestDispatcher("/ListaLibri.jsp");
 		dispatcher.forward(request, response);
 	}
-
+///
 	public static void OpenInsert(HttpServletRequest request, HttpServletResponse response, ServletContext sc)
 			throws ServletException, IOException {
 		RequestDispatcher dispatcher = sc.getRequestDispatcher("/Index.jsp");
