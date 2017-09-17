@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <link type="text/css" rel="stylesheet" href="jsgrid.min.css" />
 <link type="text/css" rel="stylesheet" href="jsgrid-theme.min.css" />
+<script src="jquery-3.2.1.min.js"></script>
  <t:master>
 		<jsp:body>
 			<ol class="breadcrumb">
@@ -14,7 +15,7 @@
 				<div class="panel-footer">
 				
 					<div class="col-lg-1">
-						<input type="submit" class="btn" value="Esportaaaa" id="buttExport" onclick="$('#hiddenButtonName')[0].value='Export';"/>
+						<input type="submit" class="btn" value="Esporta" id="buttExport" onclick="$('#hiddenButtonName')[0].value='Export';"/>
 					</div>
 					<div class="col-lg-1">
 						<input type="submit" class="btn" value="Rendi" id="buttRendi" onclick="$('#hiddenButtonName')[0].value='Rendi';"/>
@@ -40,8 +41,12 @@
 		           "prezzo": "${libro.get_prezzo()}",
 		      });
 		     </c:forEach>
-		
-		    $("#jsGrid").jsGrid({
+
+				var pageRow = 20;
+				if ($(window).height() < 900) {
+					pageRow = 10;
+				}
+		    var jsgrid = $("#jsGrid").jsGrid({
 		        width: "100%",
 		 
 		        inserting: false,
@@ -49,8 +54,8 @@
 		        sorting: true,
 		        paging: true,
 		        selecting: true,
-		        height:$(window).height() * 0.85,
-		 
+
+				 		pageSize: pageRow,
 		        data: libri,
 		 
 		        fields: [
@@ -68,11 +73,13 @@
 		            		"isbn": args.item.ISBN,
 		            		},
 		            		function() {
-		            			window.location = "DaInserire.jsp";
+			            		window.location = "DaInserire.jsp";
 		                		});
 		        		//window.location = "DaInserire.jsp";
 						} 
 		    });
+      
+				
 			</script>
 		</jsp:body>
 </t:master>

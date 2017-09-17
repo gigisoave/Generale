@@ -13,12 +13,11 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONException;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-
+import utility.DBFactory;
+import utility.ILibriDB;
+import utility.LibribottegaException;
 import utility.Libro;
 import utility.ListOperationEnum;
-import utility.MongoLibri;
 import utility.ViewTypeEnum;
 
 @WebServlet({"/ExportController"})
@@ -30,12 +29,17 @@ public class ExportController extends HttpServlet {
 		ListOperationEnum type = ListOperationEnum.valueOf(request.getParameter("hiddenButtonName"));
 		switch(type) {
 		case Export:
-			Esporta(response, request);
+			try {
+				Esporta(response, request);
+			} catch (LibribottegaException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			break;
 		case Rendi:
 			try {
 				Rendi(response);
-			} catch (JSONException e) {
+			} catch (JSONException | LibribottegaException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -49,8 +53,8 @@ public class ExportController extends HttpServlet {
 		doGet(request, response);
 	}
 
-	private void Rendi(HttpServletResponse response) throws JsonGenerationException, JsonMappingException, JSONException, IOException {
-		MongoLibri ml = new MongoLibri();
+	private void Rendi(HttpServletResponse response) throws LibribottegaException {
+		ILibriDB ml = DBFactory.GetDB();
 		ArrayList<Libro> disponibili = ml.getAll(ViewTypeEnum.InShop);
 		for (Libro l: disponibili) {
 			l.set_resi(l.GetDisponibili());
@@ -58,7 +62,7 @@ public class ExportController extends HttpServlet {
 		}
 	}
 	
-	private void Esporta(HttpServletResponse response, HttpServletRequest request) throws IOException {
+	private void Esporta(HttpServletResponse response, HttpServletRequest request) throws IOException, LibribottegaException {
 
 		String fileName = "export.txt";
 		String fileType = "text/plain";
@@ -67,7 +71,7 @@ public class ExportController extends HttpServlet {
 		response.setHeader("Content-disposition", "attachment; filename=" + fileName);
 
 		OutputStream out = response.getOutputStream();
-		MongoLibri ml = new MongoLibri();
+		ILibriDB ml = DBFactory.GetDB();
 		ViewTypeEnum type = ViewTypeEnum.All;
 		HttpSession sess = request.getSession();
 		if (sess.getAttribute("list_type") != null)

@@ -11,9 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import utility.DBFactory;
+import utility.ILibriDB;
 import utility.JsonReader;
 import utility.Libro;
-import utility.MongoLibri;
 
 @WebServlet({"/GetBookController"})
 public class GetBookController extends HttpServlet {
@@ -23,7 +25,7 @@ public class GetBookController extends HttpServlet {
 			throws ServletException, IOException {
 		try {
 			String isbn = request.getParameter("ISBN");
-			MongoLibri ml = new MongoLibri();
+			ILibriDB ml = DBFactory.GetDB();
 			Libro l = ml.FindByIsbn(isbn);
 			if (l == null) {
 				String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;

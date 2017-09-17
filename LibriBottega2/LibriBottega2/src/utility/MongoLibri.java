@@ -1,8 +1,7 @@
 /** <a href="http://www.cpupk.com/decompiler">Eclipse Class Decompiler</a> plugin, Copyright (c) 2017 Chen Chao. **/
 package utility;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -12,15 +11,13 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.util.JSON;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import org.bson.Document;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MongoLibri {
+public class MongoLibri implements ILibriDB {
 	MongoClient _client;
 	MongoDatabase _db;
 	MongoCollection<Document> _libriCollection;
@@ -36,25 +33,38 @@ public class MongoLibri {
 		this._client.close();
 	}
 
-	public void insert(Libro libro) throws JsonGenerationException, JsonMappingException, IOException {
+	public void insert(Libro libro) throws LibribottegaException  {
 		ObjectMapper map = new ObjectMapper();
-		String jsonLibro = map.writeValueAsString(libro);
-		Document dl = new Document("libro", JSON.parse(jsonLibro));
-		this._libriCollection.insertOne(dl);
+		String jsonLibro;
+		try {
+			jsonLibro = map.writeValueAsString(libro);
+			Document dl = new Document("libro", JSON.parse(jsonLibro));
+			this._libriCollection.insertOne(dl);
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new LibribottegaException(e);
+		}
 	}
 
-	public void insertOrUpdate(Libro libro)
-			throws JsonGenerationException, JsonMappingException, IOException, JSONException {
+	public void insertOrUpdate(Libro libro) throws LibribottegaException {
 		Libro l = FindByIsbn(libro.get_isbn());
 		ObjectMapper map = new ObjectMapper();
-		String jsonLibro = map.writeValueAsString(libro);
-		Document dl = new Document("libro", JSON.parse(jsonLibro));
-		if (l == null) {
-			this._libriCollection.insertOne(dl);
-		} else {
-			BasicDBObject whereQuery = new BasicDBObject();
-			whereQuery.put("libro._isbn", libro.get_isbn());
-			this._libriCollection.replaceOne(whereQuery, dl);
+		String jsonLibro;
+		try {
+			jsonLibro = map.writeValueAsString(libro);
+			Document dl = new Document("libro", JSON.parse(jsonLibro));
+			if (l == null) {
+				this._libriCollection.insertOne(dl);
+			} else {
+				BasicDBObject whereQuery = new BasicDBObject();
+				whereQuery.put("libro._isbn", libro.get_isbn());
+				this._libriCollection.replaceOne(whereQuery, dl);
+			}
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new LibribottegaException(e);
 		}
 	}
 
@@ -84,6 +94,7 @@ public class MongoLibri {
 				libri.add(l);
 			} catch (Exception e) {
 				e.printStackTrace();
+				throw e;
 			}
 	}
 
@@ -124,12 +135,13 @@ public class MongoLibri {
 					ret.add(l);
 			} catch (Exception e) {
 				e.printStackTrace();
+				throw e;
 			}
 		}
 		return ret;
 	}
 
-	public Libro FindByIsbn(String isbn) throws JSONException {
+	public Libro FindByIsbn(String isbn)  {
 		Libro ret = null;
 		BasicDBObject clauseIsbn = new BasicDBObject();
 		clauseIsbn.put("libro._isbn", isbn);
@@ -144,7 +156,7 @@ public class MongoLibri {
 		return ret;
 	}
 
-	public ArrayList<Libro> FindByProp(String prop) throws JSONException {
+	public ArrayList<Libro> FindByProp(String prop) {
 		ArrayList<Libro> ret = new ArrayList<Libro>();
 		BasicDBObject clauseIsbn = new BasicDBObject();
 		clauseIsbn.put("libro._isbn", prop);
