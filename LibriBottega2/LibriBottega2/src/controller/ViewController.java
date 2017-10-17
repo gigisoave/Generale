@@ -12,8 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import utility.DBFactory;
+import utility.ILibriDB;
 import utility.Libro;
-import utility.MongoLibri;
 import utility.ViewTypeEnum;
 
 @WebServlet({"/ViewController"})
@@ -28,7 +29,7 @@ public class ViewController extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("viewstate_index", isbn);
 			session.setAttribute("list_type", type);
-			MongoLibri m = new MongoLibri();
+			ILibriDB m = DBFactory.GetDB();
 			ArrayList<Libro> libri = new ArrayList<Libro>();
 			if ((isbn != null) && (!(isbn.isEmpty()))) {
 				libri = m.FindByProp(isbn);

@@ -25,7 +25,7 @@ public class Common {
 
 	public static void OpenInsert(HttpServletRequest request, HttpServletResponse response, ServletContext sc)
 			throws ServletException, IOException {
-		RequestDispatcher dispatcher = sc.getRequestDispatcher("/Index.jsp");
+		RequestDispatcher dispatcher = sc.getRequestDispatcher("/index.jsp");
 		dispatcher.forward(request, response);
 	}
 

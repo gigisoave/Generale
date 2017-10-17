@@ -80,6 +80,20 @@ public class Libro {
 		}
 	}
 
+	public JSONObject GetJson() {
+		JSONObject json = new JSONObject();
+		json.put(JSONFLD_TITOLO, this.get_titolo());
+		json.put(JSONFLD_AUTORISTRING, this.get_autoriString());
+		json.put(JSONFLD_CASAEDITRICE, this.get_casaEditrice());
+		json.put(JSONFLD_GENERE, this.get_genere());
+		json.put(JSONFLD_ISBN, this.get_isbn());
+		json.put(JSONFLD_PREZZO, this.get_prezzo());
+		json.put(JSONFLD_QUANTITA, this.get_quantita());
+		json.put(JSONFLD_RESI, this.get_resi());
+		json.put(JSONFLD_VENDUTI, this.get_venduti());
+		return json;
+	}
+	
 	public String get_titolo() {
 		return this._titolo;
 	}

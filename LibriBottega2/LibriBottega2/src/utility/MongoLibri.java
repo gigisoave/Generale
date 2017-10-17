@@ -61,7 +61,7 @@ public class MongoLibri implements ILibriDB {
 				whereQuery.put("libro._isbn", libro.get_isbn());
 				this._libriCollection.replaceOne(whereQuery, dl);
 			}
-		} catch (JsonProcessingException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new LibribottegaException(e);

@@ -6,7 +6,7 @@
  <t:master>
 		<jsp:body>
 			<ol class="breadcrumb">
-			  <li><a href="Index.jsp">Home</a></li>
+			  <li><a href="index.jsp">Home</a></li>
 			  <li><a href="#">Lista</a></li>
 			</ol>
 			<div id="jsGrid"></div>
@@ -72,8 +72,8 @@
 		        		$.get("ListaLibriController", {
 		            		"isbn": args.item.ISBN,
 		            		},
-		            		function() {
-			            		window.location = "DaInserire.jsp";
+		            		function(libro) {
+			            		window.location.href = "DaInserire.jsp";
 		                		});
 		        		//window.location = "DaInserire.jsp";
 						} 

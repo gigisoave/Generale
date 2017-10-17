@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import utility.CaseEditrici;
 import utility.DBFactory;
 import utility.ILibriDB;
 import utility.JsonReader;
@@ -28,22 +29,13 @@ public class GetBookController extends HttpServlet {
 			ILibriDB ml = DBFactory.GetDB();
 			Libro l = ml.FindByIsbn(isbn);
 			if (l == null) {
-				String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn;
-				JSONObject json = new JSONObject();
-				try {
-					json = JsonReader.readJsonFromUrl(url);
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				boolean existIsbn = false;
-				try {
-					existIsbn = ((Integer) json.get("totalItems")).intValue() == 1;
-				} catch (JSONException e) {
-					e.printStackTrace();
+				JSONObject json = GetFromUrl("https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn);
+				if (json == null) {
+					json = GetFromUrl("https://www.googleapis.com/books/v1/volumes?q=ean:" + isbn);
 				}
 				l = new Libro();
 				l.set_isbn(isbn);
-				if (existIsbn) {
+				if (json != null) {
 					JSONObject volumeInfo = json.getJSONArray("items").getJSONObject(0).getJSONObject("volumeInfo");
 					l.set_titolo(volumeInfo.getString("title"));
 					try {
@@ -52,7 +44,11 @@ public class GetBookController extends HttpServlet {
 						l.set_autore("AA.VV");
 					}
 					try {
-						l.set_casaEditrice(volumeInfo.getString("publisher"));
+						String casa = CaseEditrici.GetCasaEditrice(isbn);
+						if (casa.isEmpty())
+							l.set_casaEditrice(volumeInfo.getString("publisher"));
+						else
+							l.set_casaEditrice(volumeInfo.getString(casa));
 					} catch (Exception localException1) {
 					}
 				}
@@ -64,5 +60,23 @@ public class GetBookController extends HttpServlet {
 			sos.write(ex.getMessage().getBytes(), 0, ex.getMessage().length());
 			sos.flush();
 		}
+	}
+	
+	private JSONObject GetFromUrl(String url) throws IOException {
+		JSONObject json = new JSONObject();
+		try {
+			json = JsonReader.readJsonFromUrl(url);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		boolean existIsbn = false;
+		try {
+			existIsbn = ((Integer) json.get("totalItems")).intValue() == 1;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		if (!existIsbn)
+			json = null;
+		return json;
 	}
 }

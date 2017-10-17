@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.json.JSONException;
+import org.json.JSONException;	
 
 import utility.DBFactory;
 import utility.ILibriDB;
@@ -23,17 +23,29 @@ public class ListaLibriController extends HttpServlet {
 			throws ServletException, IOException {
 		String isbn = request.getParameter("isbn");
 		ILibriDB ml = DBFactory.GetDB();
+		Libro l =new Libro();
 		try {
-			Libro l = ml.FindByIsbn(isbn);
+			l = ml.FindByIsbn(isbn);
+			if (l == null) {
+				l = new Libro();
+				l.set_titolo("non trovato");
+			}
 			HttpSession session = request.getSession();
 			session.setAttribute("libro", l);
 			session.setAttribute("generi", Common.Generi());
 		} catch (JSONException e) {
+			l.set_titolo(e.getMessage());
 			e.printStackTrace();
 		} catch (LibribottegaException e) {
+			l.set_titolo(e.getMessage());
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//HttpSession session = request.getSession();
+		//session.setAttribute("libro", l);
+		//session.setAttribute("generi", Common.Generi());
+		response.setContentType("application/json");
+		response.getWriter().write(l.GetJson().toString());
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)

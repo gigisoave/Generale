@@ -2,5 +2,5 @@
 package utility;
 
 public enum Genere {
-	nessuno, bambini, narrativa, economia, giochi, turismo, fumetti, cucina, società;
+	nessuno, bambini, cucina, economia, fumetti,  giochi, narrativa, ragazzi, saggio, turismo;
 }
