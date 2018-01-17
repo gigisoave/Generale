@@ -1,11 +1,12 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+ <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
  <t:master>
 		<jsp:body>
 			<ol class="breadcrumb">
 			  <li><a href="index.jsp">Home</a></li>
 			  <li><a href="ListaLibri.jsp">Lista</a></li>
-			  <li><a href="#">Dettaglio - 01-10</a></li>
+			  <li><a href="#">Dettaglio -17/01</a></li>
 			</ol>
 			<!--<jsp:useBean id="libro" scope="session" class="utility.Libro"></jsp:useBean>-->
 			<form action="DaInserireController" method="get">
@@ -89,7 +90,7 @@
 								<label id="label-8">Resi:</label>
 							</div>
 							<div class="col-lg-1">
-								<input id="venduti" class="form-control"  type="text" name="venduti" value="${libro.get_resi()}"/>
+								<input id="resi" class="form-control"  type="text" name="resi" value="${libro.get_resi()}"/>
 							</div>
 					</div>
 					<div class="panel-footer">
@@ -105,6 +106,29 @@
 				$(".dropdown-menu li a").click(function(){
 					  $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
 					  $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+					});
+				$(document).ready(function() {
+					if ($('#isbn')[0].value == "") {
+						$.get("DaInserireController", {
+		            		"ISBN": location.href.substring(location.href.search('isbn') + 5),
+		            		"view": true,
+		            		"all": true
+		            		},
+		            		function (libro) {
+			            		var jsonLibro = JSON.parse(libro);
+			            		$('#isbn')[0].value = jsonLibro._isbn;		   
+			            		$('#titolo')[0].value = jsonLibro._titolo;		   
+			            		$('#autori')[0].value = jsonLibro._autoriString;		   
+			            		$('#casaeditrice')[0].value = jsonLibro._casaEditrice;		   
+			            		$('#genere')[0].value = jsonLibro._genere;		               
+			            		$('#prezzo')[0].value = jsonLibro._prezzo;		               
+			            		$('#quantita')[0].value = jsonLibro._quantita;		               
+			            		$('#resi')[0].value = jsonLibro._resi;	               
+			            		$('#venduti')[0].value = jsonLibro._venduti;	           
+			            		$('#disponibili')[0].value = jsonLibro._disponibili;	            		
+		            		}
+		            	);
+						}
 					});
 			</script>
 		</jsp:body>

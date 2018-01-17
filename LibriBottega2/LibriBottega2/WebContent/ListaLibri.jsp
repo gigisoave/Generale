@@ -46,6 +46,17 @@
 				if ($(window).height() < 900) {
 					pageRow = 10;
 				}
+				$.extend(
+						{
+						    redirectPost: function(location, args)
+						    {
+						        var form = '';
+						        $.each( args, function( key, value ) {
+						            form += '<input type="hidden" name="'+key+'" value="'+value+'">';
+						        });
+						        $('<form action="'+location+'" method="POST">'+form+'</form>').submit();
+						    }
+						});
 		    var jsgrid = $("#jsGrid").jsGrid({
 		        width: "100%",
 		 
@@ -69,14 +80,23 @@
 		        ],
 		    		onItemEditing: function(args) {
 		        		args.cancel = true;
-		        		$.get("ListaLibriController", {
-		            		"isbn": args.item.ISBN,
+		        		//response.sendRedirect(request.getContextPath()+"/DaInserireController");
+		        		$.get("DaInserireController", {
+		            		"ISBN": args.item.ISBN,
+		            		"view": true
 		            		},
-		            		function(libro) {
-			            		window.location.href = "DaInserire.jsp";
-		                		});
-		        		//window.location = "DaInserire.jsp";
-						} 
+		            		function (isbn) {
+		            			var redirect = function(url, method) {
+		            			    var form = document.createElement('form');
+		            			    form.method = method;
+		            			    form.action = url;
+		            			    form.submit();
+		            			};
+		            			window.location.href = "DaInserire.jsp?isbn=" + isbn;
+			            		//$.redirectPost('DaInserire.jsp', {'libro': libro._isbn });
+		            		}
+		            	);
+		    		}
 		    });
       
 				
