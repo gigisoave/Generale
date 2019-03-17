@@ -92,8 +92,9 @@
 		            			    form.action = url;
 		            			    form.submit();
 		            			};
-		            			window.location.href = "DaInserire.jsp?isbn=" + isbn;
+		            			//window.location.href = "DaInserire.jsp?isbn=" + isbn;
 			            		//$.redirectPost('DaInserire.jsp', {'libro': libro._isbn });
+		            			window.location.href = "GetBookController?ISBN=" + isbn + "&hiddenButtonName="
 		            		}
 		            	);
 		    		}

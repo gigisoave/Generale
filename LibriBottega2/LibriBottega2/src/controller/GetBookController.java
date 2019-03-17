@@ -27,7 +27,12 @@ public class GetBookController extends HttpServlet {
 		try {
 			String isbn = request.getParameter("ISBN");
 			ILibriDB ml = DBFactory.GetDB();
+			//JSONObject jsonLibro = GetFromUrl("http://localhost:8080/LibriBottega_RestfulService/rest/service/findbyisbn/" + isbn);
 			Libro l = ml.FindByIsbn(isbn);
+			//Libro l = null;
+			//9788861425194
+			//if (jsonLibro != null)
+				//l = new Libro();
 			if (l == null) {
 				JSONObject json = GetFromUrl("https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn);
 				if (json == null) {

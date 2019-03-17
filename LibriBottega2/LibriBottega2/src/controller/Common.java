@@ -16,7 +16,7 @@ import utility.Libro;
 public class Common {
 	public static void OpenListaLibri(ArrayList<Libro> libri, HttpServletRequest request, HttpServletResponse response,
 			ServletContext sc) throws ServletException, IOException {
-		HttpSession session = request.getSession();	
+		HttpSession session = request.getSession();
 		session.setAttribute("libri", libri);
 
 		RequestDispatcher dispatcher = sc.getRequestDispatcher("/ListaLibri.jsp");

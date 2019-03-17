@@ -3,6 +3,7 @@
 	<name>LibriBottega2</name>
 	<comment></comment>
 	<projects>
+		<project>LibriBottega_RestfulService</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

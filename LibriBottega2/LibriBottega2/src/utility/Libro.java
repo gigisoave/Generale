@@ -87,6 +87,11 @@ public class Libro {
 		json.put(JSONFLD_DISPONIBILI, this.GetDisponibili());
 		return json;		
 	}
+	public JSONObject GetJsonAutore() {
+		JSONObject json = GetJson();
+		json.put(JSONFLD_AUTORE, this.get_autore());
+		return json;		
+	}
 	public JSONObject GetJson() {
 		JSONObject json = new JSONObject();
 		json.put(JSONFLD_TITOLO, this.get_titolo());
@@ -97,7 +102,6 @@ public class Libro {
 		json.put(JSONFLD_PREZZO, this.get_prezzo());
 		json.put(JSONFLD_QUANTITA, this.get_quantita());
 		json.put(JSONFLD_RESI, this.get_resi());
-		json.put(JSONFLD_VENDUTI, this.get_venduti());
 		json.put(JSONFLD_VENDUTI, this.get_venduti());
 		return json;
 	}

@@ -6,11 +6,12 @@
 			<ol class="breadcrumb">
 			  <li><a href="index.jsp">Home</a></li>
 			  <li><a href="ListaLibri.jsp">Lista</a></li>
-			  <li><a href="#">Dettaglio -17/01</a></li>
+			  <li><a href="#">Dettaglio -17/03</a></li>
 			</ol>
 			<!--<jsp:useBean id="libro" scope="session" class="utility.Libro"></jsp:useBean>-->
 			<form action="DaInserireController" method="get">
-				<div class="container-fluid">
+				<div class="container-fluid" id="divContainer">
+			<div class="pulse" id="divPulse"></div>
 					<div class="row">
 						<div class="col-lg-1">
 							<label id="label-0" >ISBN:</label>
@@ -108,7 +109,9 @@
 					  $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
 					});
 				$(document).ready(function() {
-					if ($('#isbn')[0].value == "") {
+					if ($('#isbn')[0].value == "") { 
+						var pulse =new Pulse($('#divPulse')[0], $('#divContainer')[0]);
+						pulse.Show();
 						$.get("DaInserireController", {
 		            		"ISBN": location.href.substring(location.href.search('isbn') + 5),
 		            		"view": true,
@@ -125,7 +128,8 @@
 			            		$('#quantita')[0].value = jsonLibro._quantita;		               
 			            		$('#resi')[0].value = jsonLibro._resi;	               
 			            		$('#venduti')[0].value = jsonLibro._venduti;	           
-			            		$('#disponibili')[0].value = jsonLibro._disponibili;	            		
+			            		$('#disponibili')[0].value = jsonLibro._disponibili;	
+											pulse.Hide();          		
 		            		}
 		            	);
 						}

@@ -49,11 +49,13 @@ public class MongoLibri implements ILibriDB {
 
 	public void insertOrUpdate(Libro libro) throws LibribottegaException {
 		Libro l = FindByIsbn(libro.get_isbn());
-		ObjectMapper map = new ObjectMapper();
-		String jsonLibro;
+		//ObjectMapper map = new ObjectMapper();
+		//String jsonLibro;
 		try {
-			jsonLibro = map.writeValueAsString(libro);
-			Document dl = new Document("libro", JSON.parse(jsonLibro));
+			//jsonLibro = map.writeValueAsString(libro);
+			JSONObject jsonObjLibro = libro.GetJsonAutore();
+			//Document dl = new Document("libro", JSON.parse(jsonLibro));
+			Document dl = new Document("libro", JSON.parse(jsonObjLibro.toString()));
 			if (l == null) {
 				this._libriCollection.insertOne(dl);
 			} else {

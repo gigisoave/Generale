@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.picketbox.util.StringUtil;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.sun.xml.internal.ws.util.StringUtils;
@@ -24,9 +26,11 @@ import utility.MongoLibri;
 import utility.ViewTypeEnum;
 
 @WebServlet({"/DaInserireController"})
+@RestController()
 public class DaInserireController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+    @RequestMapping("/greeting")
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException
 	{

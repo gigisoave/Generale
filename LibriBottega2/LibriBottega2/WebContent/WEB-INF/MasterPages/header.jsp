@@ -7,6 +7,7 @@
 <script type="text/javascript" src="jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="jsgrid.min.js"></script>
 <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="pulse.js"></script>
 <head>
 	<meta charset="ISO-8859-1" content="">
 	<meta name="viewport" content="initial-scale=1, width=device-width">
