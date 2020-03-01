@@ -17,8 +17,6 @@ import org.picketbox.util.StringUtil;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import com.sun.xml.internal.ws.util.StringUtils;
 
 import utility.Genere;
 import utility.Libro;
@@ -84,6 +82,7 @@ public class DaInserireController extends HttpServlet {
 			l.set_prezzo(Double.parseDouble(request.getParameter("prezzo")));
 			l.set_quantità(Integer.parseInt(request.getParameter("quantita")));
 			l.set_venduti(Integer.parseInt(request.getParameter("venduti")));
+			l.set_resi(Integer.parseInt(request.getParameter("resi")));
 
 			m = new MongoLibri();
 			for (int i = 0; i < l.get_quantita(); ++i) {

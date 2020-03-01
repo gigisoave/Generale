@@ -1,8 +1,12 @@
 /** <a href="http://www.cpupk.com/decompiler">Eclipse Class Decompiler</a> plugin, Copyright (c) 2017 Chen Chao. **/
 package utility;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,6 +22,7 @@ public class Libro {
 	private String _isbn;
 	private int _venduti = 0;
 	private int _resi = 0;
+	private List<LocalDateTime> _dateVendite;
 	public static final String JSONFLD_LIBRO = "libro";
 	public static final String JSONFLD_TITOLO = "_titolo";
 	public static final String JSONFLD_CASAEDITRICE = "_casaEditrice";
@@ -30,6 +35,7 @@ public class Libro {
 	public static final String JSONFLD_VENDUTI = "_venduti";
 	public static final String JSONFLD_RESI = "_resi";
 	public static final String JSONFLD_DISPONIBILI = "_disponibili";
+	public static final String JSONFLD_DATEVENDITE = "_dateVendite";
 
 	public Libro() {
 		this._autori = new ArrayList<String>();
@@ -42,6 +48,7 @@ public class Libro {
 
 	public Libro(JSONObject json) throws JSONException {
 		this._autori = new ArrayList<String>();
+		this._dateVendite = new ArrayList<LocalDateTime>();
 		JSONObject volume = json.getJSONObject("libro");
 		try {
 			set_titolo(volume.getString("_titolo"));
@@ -60,7 +67,7 @@ public class Libro {
 		} catch (Exception localException3) {
 		}
 		try {
-			set_venduti(volume.getInt("_venduti"));
+			set_venduti(volume.getInt("_venduti"), false);
 		} catch (Exception localException4) {
 		}
 		try {
@@ -79,19 +86,28 @@ public class Libro {
 			set_isbn(volume.getString("_isbn"));
 		} catch (Exception localException8) {
 		}
-	}
 
+		try {
+			set_DateVendite(volume.getJSONArray(JSONFLD_DATEVENDITE));
+		} catch (Exception localException8) {
+		}
+
+	}
 
 	public JSONObject GetJsonAll() {
 		JSONObject json = GetJson();
 		json.put(JSONFLD_DISPONIBILI, this.GetDisponibili());
-		return json;		
+		json.put(JSONFLD_DATEVENDITE, this.get_DateVendite());
+		return json;
 	}
+
 	public JSONObject GetJsonAutore() {
 		JSONObject json = GetJson();
 		json.put(JSONFLD_AUTORE, this.get_autore());
-		return json;		
+		json.put(JSONFLD_DATEVENDITE, this.get_DateVendite());
+		return json;
 	}
+
 	public JSONObject GetJson() {
 		JSONObject json = new JSONObject();
 		json.put(JSONFLD_TITOLO, this.get_titolo());
@@ -105,12 +121,15 @@ public class Libro {
 		json.put(JSONFLD_VENDUTI, this.get_venduti());
 		return json;
 	}
-	
+
 	public String get_titolo() {
 		return this._titolo;
 	}
 
 	public void set_titolo(String titolo) {
+		if (titolo.toUpperCase().startsWith("AICRON"))
+			this._titolo = titolo;
+			
 		this._titolo = titolo;
 	}
 
@@ -175,19 +194,63 @@ public class Libro {
 	}
 
 	public void set_venduti(int _venduti) {
+		set_venduti(_venduti, this._venduti < _venduti);
+	}
+	public void set_venduti(int _venduti, Boolean setDate) {
 		this._venduti = _venduti;
+		if (setDate) {
+			if (this._dateVendite == null)
+				this._dateVendite = new ArrayList<LocalDateTime>();
+			this._dateVendite.add(LocalDateTime.now());
+		}
 	}
 
 	public int get_resi() {
 		return this._resi;
 	}
 
-	public void set_resi(int _resi) {
-		this._resi = _resi;
+	public void set_resi(int resi) {
+		this._resi = resi;
 	}
-
+	
 	public String get_isbn() {
 		return this._isbn;
+	}
+
+	public void set_DateVendite(JSONArray jsonArray) {
+		if (jsonArray != null && jsonArray.length() > 0) {
+			
+			for (int i = 0; i <  jsonArray.length(); i++) {
+				try {
+					this._dateVendite.add(LocalDateTime.parse(jsonArray.getString(i)));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			}
+		}		
+	}
+	
+
+	public List<LocalDateTime> get_DateVendite() {
+		return this._dateVendite;
+	}
+	
+	public LocalDateTime get_LastDateVendite() {
+		if (this._dateVendite != null && _dateVendite.size()>0) {
+			this._dateVendite.sort(Comparator.comparing(o->o));
+			return this._dateVendite.get(0);
+		}
+		else {
+			return LocalDateTime.MIN; 
+		}
+	}
+	
+	public String get_LastDateVenditeAsString() {
+		LocalDateTime temp = get_LastDateVendite();
+		String ret = "N.A.";
+		if (temp != LocalDateTime.MIN)
+			ret =get_LastDateVendite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));  
+		return ret;
 	}
 
 	public void set_isbn(String _isbn) {
@@ -197,4 +260,5 @@ public class Libro {
 	public int GetDisponibili() {
 		return (this._quantita - this._venduti - this._resi);
 	}
+
 }

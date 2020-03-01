@@ -6,7 +6,7 @@
 			<ol class="breadcrumb">
 			  <li><a href="index.jsp">Home</a></li>
 			  <li><a href="ListaLibri.jsp">Lista</a></li>
-			  <li><a href="#">Dettaglio -17/03</a></li>
+			  <li><a href="#">Dettaglio -12/01</a></li>
 			</ol>
 			<!--<jsp:useBean id="libro" scope="session" class="utility.Libro"></jsp:useBean>-->
 			<form action="DaInserireController" method="get">

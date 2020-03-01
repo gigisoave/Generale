@@ -3,6 +3,7 @@ package controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -57,7 +58,7 @@ public class ExportController extends HttpServlet {
 		ILibriDB ml = DBFactory.GetDB();
 		ArrayList<Libro> disponibili = ml.getAll(ViewTypeEnum.InShop);
 		for (Libro l: disponibili) {
-			l.set_resi(l.GetDisponibili());
+			l.set_resi(l.get_resi() + l.GetDisponibili());
 			ml.insertOrUpdate(l);
 		}
 	}
@@ -91,8 +92,9 @@ public class ExportController extends HttpServlet {
 			break;
 			case Sold:
 				if (text.isEmpty())
-					text = "ISBN|TITOLO|VENDUTI|PREZZO" + System.getProperty("line.separator");
+					text = "ISBN|TITOLO|VENDUTI|PREZZO|DataVendita" + System.getProperty("line.separator");
 				text = text + l.get_isbn() + "|" + l.get_titolo() + "|" + l.get_venduti() + "|" + l.get_prezzo()
+				+ "|" + l.get_LastDateVendite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 				+ System.getProperty("line.separator");	
 				break;
 			default:

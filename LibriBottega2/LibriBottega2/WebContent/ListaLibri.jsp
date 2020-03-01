@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <link type="text/css" rel="stylesheet" href="jsgrid.min.css" />
 <link type="text/css" rel="stylesheet" href="jsgrid-theme.min.css" />
-<script src="jquery-3.2.1.min.js"></script>
+<script src="jquery-3.2.1.js"></script>
  <t:master>
 		<jsp:body>
 			<ol class="breadcrumb">
@@ -23,6 +23,45 @@
 				</div>
 			</form>
 			<script type="text/javascript">
+			$(function () {
+				  $( "#dialog1" ).dialog({
+				    autoOpen: false
+				  });
+				  
+				  $("#opener").click(function() {
+				    $("#dialog1").dialog('open');
+				  });
+				});
+				function getFields() {
+					  var fields= [
+				            { name: "ISBN", type: "text", width: 70, validate: "required" },
+				            { name: "Titolo", type: "text", width: 200, validate: "required" },
+				            { name: "Autore", type: "text", width: 200 },
+				            { name: "prezzo", type: "text", width: 50, validate: "required" },
+				            { name: "genere", type: "text", width: 50 },
+				            { name: "disponibili", type: "text", width: 70 },
+				            { type: "control", 
+				            	 modeSwitchButton: false,
+				                 editButton: false
+				            }
+				        ]
+						if ("${list_type}" == "Sold") {
+							fields= [
+					            { name: "ISBN", type: "text", width: 70, validate: "required" },
+					            { name: "Titolo", type: "text", width: 200, validate: "required" },
+					            { name: "Autore", type: "text", width: 200 },
+					            { name: "prezzo", type: "text", width: 50, validate: "required" },
+					            { name: "genere", type: "text", width: 50 },
+					            { name: "ultimaVendita", type: "text", width: 70, title: "Ultima Vendita" },
+					            { type: "control", 
+					            	 modeSwitchButton: false,
+					                 editButton: false
+					            }
+					            ]
+						}
+				 	return fields;      				 	
+				}
+			
 				var libri = new Array();
 		 		 <c:forEach items="${libri}" var="libro" varStatus="status">
 		  		 libri.push(
@@ -37,6 +76,7 @@
 		           "acquistati": "${libro.get_quantita()}",
 		           "disponibili":  "${libro.GetDisponibili()}",
 		           "venduti":  "${libro.get_venduti()}",
+		           "ultimaVendita": "${libro.get_LastDateVenditeAsString()}",
 		           "resi":  "${libro.get_resi()}",
 		           "prezzo": "${libro.get_prezzo()}",
 		      });
@@ -68,16 +108,10 @@
 
 				 		pageSize: pageRow,
 		        data: libri,
-		 
-		        fields: [
-		            { name: "ISBN", type: "text", width: 70, validate: "required" },
-		            { name: "Titolo", type: "text", width: 200, validate: "required" },
-		            { name: "Autore", type: "text", width: 200 },
-		            { name: "prezzo", type: "text", width: 50, validate: "required" },
-		            { name: "genere", type: "text", width: 50 },
-		            { name: "disponibili", type: "text", width: 50 },
-		            { type: "control" }
-		        ],
+// 		        rowClick: function(args) {
+// 		            showDetailsDialog("Edit", args.item)
+// 		        },
+		        fields: getFields(),
 		    		onItemEditing: function(args) {
 		        		args.cancel = true;
 		        		//response.sendRedirect(request.getContextPath()+"/DaInserireController");
@@ -97,9 +131,30 @@
 		            			window.location.href = "GetBookController?ISBN=" + isbn + "&hiddenButtonName="
 		            		}
 		            	);
+		        		
 		    		}
 		    });
       
+		    $("#detailsDialog").dialog({
+		        autoOpen: false,
+		        width: 400,
+		        close: function() {
+		            $("#detailsForm").validate().resetForm();
+		            $("#detailsForm").find(".error").removeClass("error");
+		        }
+		    });
+		    var showDetailsDialog = function(dialogType, client) {
+		        $("#titolo").val(client.Titolo);
+		        $("#autori").val(client.Age);
+		        $("#prezzo").val(client.Address);
+		        
+		        formSubmitHandler = function() {
+		            saveClient(client, dialogType === "Add");
+		        };
+		 
+		        $("#detailsDialog").dialog("option", "title", dialogType + " Client")
+		                .dialog("open");
+		    };
 				
 			</script>
 		</jsp:body>
