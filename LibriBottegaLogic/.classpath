@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry exported="true" kind="lib" path="D:/Gigi/MavenRepository/org/json/json/20151123/json-20151123.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/Gigi/MavenRepository/org/mongodb/mongodb-driver/3.4.2/mongodb-driver-3.4.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/Gigi/MavenRepository/org/mongodb/mongodb-driver-core/3.4.2/mongodb-driver-core-3.4.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/Gigi/MavenRepository/org/mongodb/mongo-java-driver/3.4.2/mongo-java-driver-3.4.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/Gigi/MavenRepository/com/fasterxml/jackson/core/jackson-core/2.2.3/jackson-core-2.2.3.jar"/>
+	<classpathentry exported="true" kind="lib" path="D:/Gigi/MavenRepository/com/fasterxml/jackson/core/jackson-databind/2.2.3/jackson-databind-2.2.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
